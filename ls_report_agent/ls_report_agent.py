@@ -11,10 +11,16 @@ import pytest
 class ReportAgent(object):
     """
     An agent that can download a legal server report.
+
+    TODO:
+        report_key and report_url could be a list, so ReportAgent could be sent to get any number of reports.
     """
-    def __init__(self, report_url = None):
+    def __init__(self, api_user, api_pass, report_url, report_key):
         if report_url:
+            self.api_user = api_user
+            self.api_pass = api_pass
             self.report_url = report_url
+            self.report_key = report_key
 
     def get_raw_xml(self):
         """
@@ -28,13 +34,10 @@ class ReportAgent(object):
         Return:
             An `lxml` `ElementTree` object.
         """
-        print("Enter the credential information for the report.")
-        api_user = input("API USER NAME: ")
-        api_user_pass = getpass.getpass("API PASS: ")
-        report_key = getpass.getpass("REPORT KEY: ")
         req = requests.get(self.report_url,
-                           auth=HTTPBasicAuth(api_user, api_user_pass),
-                           params = {'api_key': report_key})
+                           auth=HTTPBasicAuth(self.api_user, self.api_pass),
+                           params = {'api_key': self.report_key})
+        req.raise_for_status()
         return etree.XML(req.content)
 
     def row_2_dict(self, row_element):
