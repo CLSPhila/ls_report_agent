@@ -11,6 +11,13 @@ name = "pypi"
 
 [packages]
 
+pytest = "*"
+requests = "*"
+lxml = "*"
+pandas = "*"
+"ruamel.yaml" = "*"
+keyring = "*"
+keyring-jeepney = "*"
 
 
 [requires]
