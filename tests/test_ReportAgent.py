@@ -22,10 +22,26 @@ def secrets():
     # secrets['Report_Key'] = keyring.get_password('demo.legalserver', 'Test Report Key')
 
     #Or get secrets from the command line
-    secrets['API_Username'] = getpass.getpass("API USER: ")
-    secrets['API_User_Pass'] = getpass.getpass("API USER PASS: ")
-    secrets['Report_Key'] = getpass.getpass("Report Key: ")
-    pytest.set_trace()
+    try:
+        secrets['reportURL']
+    except:
+        secrets['reportURL'] = getpass.getpass('REPORT URL: ')
+
+    try:
+        secrets['API_Username']
+    except:
+        secrets['API_Username'] = getpass.getpass("API USER: ")
+
+    try:
+        secrets['API_User_Pass']
+    except:
+        secrets['API_User_Pass'] = getpass.getpass("API USER PASS: ")
+
+    try:
+        secrets['Report_Key']
+    except:
+        secrets['Report_Key'] = getpass.getpass("Report Key: ")
+
     return(secrets)
 
 class TestReportAgent(object):
@@ -60,6 +76,14 @@ class TestReportAgent(object):
         agent = ReportAgent(secrets['API_Username'],
                             secrets['API_User_Pass'],
                             secrets['reportURL'],
-                            secrets['Report_Key'])
+                            secrets['Report_Key'],
+                            col_mapper = {
+                                "zip": "Zip Code",
+                                "identification_number":"Case Matter/Case ID#",
+                                "first": "Client First Name",
+                                "last": "Client Last Name",
+                                "dob":"Client Date of Birt",
+                                "matter_builtin_lookup_problem_code_legal_problem_code_expn": "Legal Problem Code"
+                            })
         pd_table = agent.get_report('pandas')
         assert isinstance(pd_table, pandas.DataFrame)
