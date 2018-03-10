@@ -4,7 +4,7 @@
 Python Module to download and parse reports from LegalServer.
 
     from ls_report_agent import ReportAgent
-    agent = ReportAgent(report_url, report_key, col_mapper = col_mapper)
+    agent = ReportAgent(api_user, api_user_password, report_url, report_key, col_mapper = col_mapper)
     rpt = agent.get_report(format='pandas')
     assert isinstance(rpt, pandas.DataFrame)
 
