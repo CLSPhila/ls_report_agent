@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-setup(name='LS Report Agent',
+setup(name='ls_report_agent',
       version='0.1',
       description='Agent for collecting a report from the LegalServer report API',
       author='Nate Vogel',
