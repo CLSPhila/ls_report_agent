@@ -12,15 +12,14 @@ class ReportAgent(object):
     """
     An agent that can download a legal server report.
 
-    TODO:
-        report_key and report_url could be a list, so ReportAgent could be sent to get any number of reports.
+
     """
-    def __init__(self, api_user, api_pass, report_url, report_key):
-        if report_url:
-            self.api_user = api_user
-            self.api_pass = api_pass
-            self.report_url = report_url
-            self.report_key = report_key
+    def __init__(self, api_user, api_pass, report_url, report_key, col_mapper = None):
+        self.api_user = api_user
+        self.api_pass = api_pass
+        self.report_url = report_url
+        self.report_key = report_key
+        self.col_mapper = col_mapper
 
     def get_raw_xml(self):
         """
@@ -72,7 +71,10 @@ class ReportAgent(object):
         report_list = []
         for row in report:
             report_list.append(self.row_2_dict(row))
-        return pandas.DataFrame(report_list)
+        try:
+            return pandas.DataFrame(report_list).rename(self.col_mapper, axis="columns")
+        except:
+            return pandas.DataFrame(report_list)
 
 
     def get_report(self, format='pandas'):
