@@ -2,5 +2,4 @@ __pycache__
 *.pyc
 .pytest_cache
 data/*
-*.egg-info
 secrets.yaml
