@@ -25,7 +25,6 @@ def secrets():
     secrets['API_Username'] = getpass.getpass("API USER: ")
     secrets['API_User_Pass'] = getpass.getpass("API USER PASS: ")
     secrets['Report_Key'] = getpass.getpass("Report Key: ")
-    pytest.set_trace()
     return(secrets)
 
 class TestReportAgent(object):
@@ -45,6 +44,7 @@ class TestReportAgent(object):
                             secrets['reportURL'],
                             secrets['Report_Key'])
         raw = agent.get_raw_xml()
+        pytest.set_trace()
         assert raw.tag == 'report'
 
     def test_xml_2_table(self, secrets):
