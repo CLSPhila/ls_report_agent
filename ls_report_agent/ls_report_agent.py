@@ -1,27 +1,67 @@
+from typing import Dict
 import requests
-from requests.auth import HTTPBasicAuth
-from urllib.parse import urlparse
+
+from requests.auth import HTTPBasicAuth, AuthBase
 from lxml import etree
-import getpass
 import pandas
 
 
-import pytest
+class BearerAuth(AuthBase):
+    """
+    Custom auth subclass for Requests. Not for use directly. Use it through the 
+    BearerToken class that is a subclass of Auth.
+    """
+    def __init__(self, token):
+        self.token = token
+    def __call__(self, r):
+        r.headers["authorization"] = "Bearer " + self.token
+        return r
 
-class ReportAgent(object):
+
+class Auth:
+    """
+    abstract class for different forms of authentication. Auth is like a tagged union, where 
+    subclasses are values of the Auth type.
+    """
+        
+    def get_auth(self):
+        raise NotImplementedError()
+    
+
+class HttpBasic(Auth):
+    """
+    Http basic authentication.
+    """
+    def __init__(self, api_user: str, api_pass: str) -> None:
+        self.api_user = api_user
+        self.api_pass = api_pass
+ 
+    def get_auth(self) -> HTTPBasicAuth:
+        return HTTPBasicAuth(self.api_user, self.api_pass)
+
+class BearerToken(Auth):
+    """
+    Bearer token authentication.
+    """
+    def __init__(self, token: str) -> None:
+        self.token = token
+
+    def get_auth(self) -> BearerAuth:
+        return BearerAuth(self.token)
+
+
+class ReportAgent:
     """
     An agent that can download a legal server report.
 
 
     """
-    def __init__(self, api_user, api_pass, report_url, report_key, col_mapper = None):
-        self.api_user = api_user
-        self.api_pass = api_pass
+    def __init__(self, auth: Auth, report_url: str, col_mapper: None | Dict[str, str] = None):
+        self.auth = auth
         self.report_url = report_url
-        self.report_key = report_key
         self.col_mapper = col_mapper
 
-    def get_raw_xml(self):
+    def get_raw_xml(self) -> etree.XML:
         """
         Get the raw xml of a report from LegalServer
 
@@ -34,8 +74,7 @@ class ReportAgent(object):
             An `lxml` `ElementTree` object.
         """
         req = requests.get(self.report_url,
-                           auth=HTTPBasicAuth(self.api_user, self.api_pass),
-                           params = {'api_key': self.report_key})
+                           auth=self.auth.get_auth())
         req.raise_for_status()
         return etree.XML(req.content)
 
@@ -54,7 +93,7 @@ class ReportAgent(object):
             row_dict[col_element.tag] = col_element.text
         return row_dict
 
-    def xml_2_table(self, xml):
+    def xml_2_table(self, xml) -> pandas.DataFrame:
         """
         Transform an xml-formatted LegalServer report into a Pandas Dataframe of the report.
 
