@@ -4,17 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
+ls-report-agent = {editable = true, path = "."}
+pytest = "*"
 
 [packages]
-pytest = "*"
-requests = ">2.20.0"
+requests = "==2.28.2"
 lxml = "*"
 pandas = "*"
-"ruamel.yaml" = "*"
-keyring = "*"
-keyring-jeepney = "*"
-"urllib3" = ">=1.24.2"
 cryptography = "*"
 
 [requires]
-python_version = "3.5"
+python_version = "3.10.8"
