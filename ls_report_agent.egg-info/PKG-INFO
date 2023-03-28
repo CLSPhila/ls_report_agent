@@ -1,0 +1,5 @@
+Metadata-Version: 2.1
+Name: ls-report-agent
+Version: 0.2
+Summary: Agent for collecting a report from the LegalServer report API
+Author: Nate Vogel

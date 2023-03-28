@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+setup.py
+ls_report_agent/__init__.py
+ls_report_agent/ls_report_agent.py
+ls_report_agent.egg-info/PKG-INFO
+ls_report_agent.egg-info/SOURCES.txt
+ls_report_agent.egg-info/dependency_links.txt
+ls_report_agent.egg-info/top_level.txt
+tests/test_ReportAgent.py
