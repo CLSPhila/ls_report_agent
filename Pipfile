@@ -8,7 +8,7 @@ ls-report-agent = {editable = true, path = "."}
 pytest = "*"
 
 [packages]
-requests = "==2.28.2"
+requests = "==2.31.0"
 lxml = "*"
 pandas = "*"
 cryptography = "*"
